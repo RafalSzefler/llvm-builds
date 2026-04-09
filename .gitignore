@@ -13,3 +13,9 @@ Cargo.lock
 
 *.pyc
 __pycache__
+
+archives/*
+!archives/.keep
+
+temp/*
+!temp/.keep
