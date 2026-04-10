@@ -3,7 +3,7 @@ import argparse
 import subprocess
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
-ARCHIVES_DIR = os.path.join(ROOT_DIR, "..", "archives")
+ARCHIVES_DIR = os.path.realpath(os.path.join(ROOT_DIR, "..", "archives"))
 
 from scripts.command_helpers import check_if_command_exists
 

@@ -27,6 +27,12 @@ on:
           - ubuntu-24.04-arm
           - macos-26
           - macos-26-arm
+permissions:
+  contents: write
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   edit-release:
     runs-on: ${{ github.event.inputs.runner }}
@@ -47,8 +53,6 @@ jobs:
       - name: Validate release exists
         run: |
           gh release view "${{ github.event.inputs.tag }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -75,5 +79,3 @@ jobs:
         run: |
           python -u builder/upload_to_github.py \
             --tag="${{ github.event.inputs.tag }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
