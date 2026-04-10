@@ -46,11 +46,13 @@ def _get_cmake_bin_dir(temp_dir: str) -> str:
 def _install_cmake_on_windows(temp_dir: str):
     arch = Arch.get_current()
     if arch == Arch.X86_64:
-        cmake_url = "https://github.com/Kitware/CMake/releases/download/v4.1.0-rc3/cmake-4.1.0-rc3-windows-x86_64.zip"
+        cmake_name = "cmake-3.29.9-windows-x86_64.zip"
     elif arch == Arch.ARM64:
-        cmake_url = "https://github.com/Kitware/CMake/releases/download/v4.1.0-rc3/cmake-4.1.0-rc3-windows-arm64.zip"
+        cmake_name = "cmake-3.29.9-windows-arm64.zip"
     else:
         raise Exception("Unsupported architecture")
+
+    cmake_url = f"https://github.com/Kitware/CMake/releases/download/v3.29.9/{cmake_name}"
 
     cmake_zip_dst = os.path.join(temp_dir, "cmake.zip")
     urllib.request.urlretrieve(cmake_url, cmake_zip_dst)
@@ -71,11 +73,13 @@ def _install_cmake_on_windows(temp_dir: str):
 def _install_cmake_on_linux(temp_dir: str):
     arch = Arch.get_current()
     if arch == Arch.X86_64:
-        cmake_url = "https://github.com/Kitware/CMake/releases/download/v4.1.0-rc4/cmake-4.1.0-rc4-linux-x86_64.tar.gz"
+        cmake_name = "cmake-3.29.9-linux-x86_64.tar.gz"
     elif arch == Arch.ARM64:
-        cmake_url = "https://github.com/Kitware/CMake/releases/download/v4.1.0-rc4/cmake-4.1.0-rc4-linux-aarch64.tar.gz"
+        cmake_name = "cmake-3.29.9-linux-aarch64.tar.gz"
     else:
         raise Exception("Unsupported architecture")
+
+    cmake_url = f"https://github.com/Kitware/CMake/releases/download/v3.29.9/{cmake_name}"
 
     cmake_tar_dst = os.path.join(temp_dir, "cmake.tar.gz")
     urllib.request.urlretrieve(cmake_url, cmake_tar_dst)
@@ -97,8 +101,8 @@ def _install_cmake_on_macos(temp_dir: str):
     if not check_if_command_exists("hdiutil"):
         raise Exception("hdiutil not found. Please install hdiutil.")
 
-    dmg_name = "cmake-4.0.3-macos-universal.dmg"
-    cmake_url = f"https://github.com/Kitware/CMake/releases/download/v4.0.3/{dmg_name}"
+    dmg_name = "cmake-3.29.9-macos-universal.dmg"
+    cmake_url = f"https://github.com/Kitware/CMake/releases/download/v3.29.9/{dmg_name}"
     cmake_dmg_dst = os.path.join(temp_dir, dmg_name)
     urllib.request.urlretrieve(cmake_url, cmake_dmg_dst)
 

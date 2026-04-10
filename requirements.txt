@@ -1,0 +1,6 @@
+# These are common dependencies for Python in order to build LLVM.
+# On many platforms they don't seem to be needed, but at least Linux
+# requires them.
+pyyaml>=6,<7
+lit>=18,<21
+jinja2>=3,<4

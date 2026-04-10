@@ -10,6 +10,8 @@ Building LLVM
 To run build scripts you need the following components:
 
 * Python3.9+ (it is necessary for building LLVM anyway)
+    * Additional Python dependencies are in `requirements.txt` file, but
+    on some platforms it seems that they are not needed.
 * git (likely any modern version will do)
 * Some valid C++ compiler (likely CMake will cry about it anyway)
 

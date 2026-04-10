@@ -1,0 +1,79 @@
+name: Build and Publish LLVM Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag"
+        required: true
+        type: choice
+        options:
+          - core
+      llvm-version:
+        description: "LLVM version"
+        required: true
+        type: choice
+        options:
+          - 22
+          - 21
+          - 20
+          - 19
+      runner:
+        description: "GitHub runner's OS"
+        required: true
+        type: choice
+        options:
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
+          - macos-26
+          - macos-26-arm
+jobs:
+  edit-release:
+    runs-on: ${{ github.event.inputs.runner }}
+
+    timeout-minutes: 360
+
+    steps:
+      - name: Display build info
+        run: |
+          echo "Runner OS: ${{ github.event.inputs.runner }}"
+          echo "Runner arch: $RUNNER_ARCH"
+          echo "LLVM version: ${{ github.event.inputs.llvm-version }}"
+          echo "Release tag: ${{ github.event.inputs.tag }}"
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      
+      - name: Validate release exists
+        run: |
+          gh release view "${{ github.event.inputs.tag }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Verify Python dependencies
+        run: |
+          python -c "import yaml; import lit; import jinja2"
+
+      - name: Build LLVM
+        run: |
+          python -u builder/build_archive.py \
+            --llvm-version=${{ github.event.inputs.llvm-version }} \
+            --temp-dir="$GITHUB_WORKSPACE/temp"
+      
+      - name: Upload build artifacts
+        run: |
+          python -u builder/upload_to_github.py \
+            --tag="${{ github.event.inputs.tag }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

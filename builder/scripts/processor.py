@@ -1,4 +1,5 @@
 import os
+import subprocess
 import sys
 import zipfile
 from pathlib import Path
@@ -17,6 +18,8 @@ def build_archive(flags: dict) -> int:
 
     if OS.get_current() == OS.Windows:
         _verify_windows_env()
+    elif OS.get_current() == OS.MacOS:
+        _verify_macos_env()
 
     log_tuple("Python version: ", sys.version)
     log_tuple("Operating system: ", OS.get_current().value)
@@ -81,6 +84,7 @@ def _add_to_archive(zipf: zipfile.ZipFile, base_dir: str, file_name: str):
             _add_to_archive(zipf, base_dir, new_path)
 
 def _verify_windows_env():
+    log_info("Verifying Windows env...")
     expected_env_vars = ["INCLUDE", "LIB", "PATH"]
     env_enabled = True
     for var in expected_env_vars:
@@ -93,3 +97,13 @@ def _verify_windows_env():
 
     if not env_enabled:
         raise Exception("MSVC environment not initialized. Please initialize MSVC environment by running VS shell, e.g. vcvars64.bat file.")
+
+    log_success("Windows env looks ok!")
+
+def _verify_macos_env():
+    log_info("Verifying MacOS env...")
+    if not check_if_command_exists("xcode-select"):
+        raise Exception("xcode-select is needed on MacOS.")
+    cmd = ["xcode-select", "--version"  ]
+    subprocess.run(cmd, check=True, capture_output=True)
+    log_success("MacOS env looks ok!")
