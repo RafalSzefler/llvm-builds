@@ -9,39 +9,23 @@ on:
         type: choice
         options:
           - core
-      os:
-        description: "Runner OS"
+      runner:
+        description: "GitHub runner's OS"
         required: true
         type: choice
         options:
           - ubuntu-latest
           - windows-latest
           - macos-latest
-
-      arch:
-        description: "Target architecture"
-        required: true
-        type: choice
-        options:
-          - x64
-          - arm64
-
 jobs:
   edit-release:
-    strategy:
-      fail-fast: true
-      matrix:
-        os: ["${{ github.event.inputs.os }}"]
-        architecture: ["${{ github.event.inputs.arch }}"]
-
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ github.event.inputs.os }}
 
     steps:
       - name: Display build info
         run: |
-          echo "OS: ${{ matrix.os }}"
-          echo "Node: ${{ matrix.node-version }}"
-          echo "Arch: ${{ matrix.architecture }}"
+          echo "Runner OS: ${{ matrix.os }}"
+          echo "Runner arch: $RUNNER_ARCH"
 
       - name: Checkout repository
         uses: actions/checkout@v4
