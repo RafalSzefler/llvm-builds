@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: ["${{ github.event.inputs.os }}""]
+        os: ["${{ github.event.inputs.os }}"]
         architecture: ["${{ github.event.inputs.arch }}"]
 
     runs-on: ${{ matrix.os }}
