@@ -1,0 +1,68 @@
+name: Build and Publish LLVM Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag"
+        required: true
+        type: choice
+        options:
+          - core
+      os:
+        description: "Runner OS"
+        required: true
+        type: choice
+        options:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+
+      arch:
+        description: "Target architecture"
+        required: true
+        type: choice
+        options:
+          - x64
+          - arm64
+
+jobs:
+  edit-release:
+    strategy:
+      fail-fast: true
+      matrix:
+        os: ["${{ github.event.inputs.os }}""]
+        architecture: ["${{ github.event.inputs.arch }}"]
+
+    steps:
+      - name: Display build info
+        run: |
+          echo "OS: ${{ matrix.os }}"
+          echo "Node: ${{ matrix.node-version }}"
+          echo "Arch: ${{ matrix.architecture }}"
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Validate tag exists
+        run: |
+          if ! git rev-parse "${{ github.event.inputs.tag }}" >/dev/null 2>&1; then
+            echo "Tag [${{ github.event.inputs.tag }}] does not exist!"
+            exit 1
+          fi
+
+      # - name: Update release notes (optional)
+      #   if: ${{ github.event.inputs.notes != '' }}
+      #   run: |
+      #     gh release edit "${{ github.event.inputs.tag }}" \
+      #       --notes "${{ github.event.inputs.notes }}"
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Upload asset to release
+      #   run: |
+      #     gh release upload "${{ github.event.inputs.tag }}" \
+      #       "${{ github.event.inputs.file }}" \
+      #       --clobber
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
