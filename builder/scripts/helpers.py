@@ -65,9 +65,10 @@ def log_error(message: str, with_newline: bool = True):
 def log_success(message: str, with_newline: bool = True):
     log_tuple("[SUCCESS] ", message, "light_green", with_newline)
 
+_FORCE_COLOR = True if "GITHUB_TOKEN" in os.environ else None
 def log_tuple(first: str, second: str, color: str = "white", with_newline: bool = True):
     end = "\n" if with_newline else ""
-    cprint(f"{first}", color, end="")
+    cprint(f"{first}", color, end="", force_color=_FORCE_COLOR)
     print(second, end=end)
 
 def _onerror(func, path, exc_info):
