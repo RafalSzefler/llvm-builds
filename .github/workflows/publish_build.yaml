@@ -72,11 +72,8 @@ jobs:
 
       - name: Build LLVM
         run: |
-          python -u builder/build_archive.py \
-            --llvm-version=${{ github.event.inputs.llvm-version }} \
-            --temp-dir="$GITHUB_WORKSPACE/temp"
+          python -u builder/build_archive.py --llvm-version="${{ github.event.inputs.llvm-version }}"
       
       - name: Upload build artifacts
         run: |
-          python -u builder/upload_to_github.py \
-            --tag="${{ github.event.inputs.tag }}"
+          python -u builder/upload_to_github.py --tag="${{ github.event.inputs.tag }}"
