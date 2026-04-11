@@ -70,9 +70,18 @@ jobs:
         run: |
           python -c "import yaml; import lit; import jinja2"
 
-      - name: Build LLVM
+      - name: Build LLVM on Windows
+        if: ${{ github.event.inputs.runner == 'windows-2025' }}
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
         run: |
-          python -u builder/build_archive.py --llvm-version="${{ github.event.inputs.llvm-version }}"
+          python -u builder/build_archive.py --llvm-version="${{ github.event.inputs.llvm-version }}" --temp-dir="c:\llvm-tmp"
+
+      - name: Build LLVM on non-Windows
+        if: ${{ !contains(github.event.inputs.runner, 'windows') }}
+        run: |
+          python -u builder/build_archive.py --llvm-version="${{ github.event.inputs.llvm-version }}" --temp-dir="$GITHUB_WORKSPACE/temp"
       
       - name: Upload build artifacts
         run: |
