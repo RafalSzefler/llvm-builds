@@ -70,12 +70,6 @@ jobs:
         run: |
           python -c "import yaml; import lit; import jinja2"
 
-      - name: Setup Windows-2025 environment if needed
-        if: ${{ github.event.inputs.runner == 'windows-2025' }}
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
-
       - name: Build LLVM
         run: |
           python -u builder/build_archive.py --llvm-version="${{ github.event.inputs.llvm-version }}"

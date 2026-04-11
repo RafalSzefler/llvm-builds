@@ -10,6 +10,7 @@ from .helpers_git import verify_git
 from .helpers_cmake import verify_and_install_cmake
 from .helpers_ninja import verify_and_install_ninja
 from .helpers_llvm import download_llvm_repo, configure_and_build_llvm_project
+from .helpers_windows import validate_windows_env, update_windows_env
 from .termcolor import cprint
 
 def build_archive(flags: dict) -> int:
@@ -85,20 +86,14 @@ def _add_to_archive(zipf: zipfile.ZipFile, base_dir: str, file_name: str):
 
 def _verify_windows_env():
     log_info("Verifying Windows env...")
-    expected_env_vars = ["INCLUDE", "LIB", "PATH"]
-    env_enabled = True
-    for var in expected_env_vars:
-        if var not in os.environ:
-            env_enabled = False
-            break
+    
+    try:
+        validate_windows_env()
+    except Exception:
+        log_warning("Windows env not valid. Trying to update...")
+        update_windows_env()
 
-    if env_enabled:
-        env_enabled = check_if_command_exists("cl")
-
-    if not env_enabled:
-        raise Exception("MSVC environment not initialized. Please initialize MSVC environment by running VS shell, e.g. vcvars64.bat file.")
-
-    log_success("Windows env looks ok!")
+    log_success("Windows env looks ok! Or we shall see...")
 
 def _verify_macos_env():
     log_info("Verifying MacOS env...")

@@ -1,9 +1,10 @@
 import argparse
-import pathlib
 import os
 import sys
+
 from scripts.command_helpers import check_if_command_exists
 from scripts.helpers import OS
+from scripts.helpers_windows import DRIVE
 from scripts.processor import build_archive
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -47,8 +48,7 @@ def _initialize() -> dict:
 def _default_temp_dir() -> str:
     if OS.get_current() == OS.Windows:
         # On Windows we need short paths for some reason...
-        drive = pathlib.Path.cwd().anchor
-        temp_dir = os.path.join(drive, "llvm-tmp")
+        temp_dir = os.path.join(DRIVE, "llvm-tmp")
     else:
         temp_dir = os.path.join(ROOT_DIR, "..", "temp")
     temp_dir = os.path.realpath(temp_dir)
