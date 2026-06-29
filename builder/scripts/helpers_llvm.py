@@ -87,8 +87,8 @@ def _configure_llvm_project(flags: dict):
             llvm_cmake_dir,
             f"-DCMAKE_INSTALL_PREFIX={llvm_out_dir}",
             "-DCMAKE_BUILD_TYPE=Release",
-            "-DLLVM_ENABLE_PROJECTS=",
-            "-DLLVM_ENABLE_RUNTIMES=",
+            "-DLLVM_ENABLE_PROJECTS=llvm;clang;clang-tools-extra;lldb;lld",
+            "-DLLVM_ENABLE_RUNTIMES=libc;compiler-rt",
             "-DLLVM_TARGETS_TO_BUILD=host",
             "-DLLVM_BUILD_DOCS=OFF",
             "-DLLVM_BUILD_TESTS=OFF",
@@ -98,7 +98,6 @@ def _configure_llvm_project(flags: dict):
             "-DLLVM_INCLUDE_EXAMPLES=OFF",
             "-DLLVM_OPTIMIZED_TABLEGEN=ON",
             "-DLLVM_ENABLE_ASSERTIONS=OFF",
-            "-DLLVM_BUILD_LLVM_DYLIB=ON",
         ]
 
         if OS.get_current() == OS.Windows:
